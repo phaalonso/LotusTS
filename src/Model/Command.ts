@@ -9,5 +9,19 @@ export default class Command {
         this.args = args;
         this.description = description;
         this.execute = execute;
+
     }
+    
+    public  getName(): string {
+        return this.name;
+    }
+
+    public getArgs(): number {
+        return this.args;
+    }
+
+    public getDescription(): string {
+        return this.description;
+    }
+
 }

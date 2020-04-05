@@ -17,38 +17,40 @@ export class DiscordBot {
 
     public commandInit(): void {
         const commandFiles = readdirSync(resolve(__dirname,'./commands'))
-            .filter(file => file.endsWith('.js'));
+            .filter(file => file.endsWith('.ts'));
 
+        console.log('Command files:' ,commandFiles);
         for (const file of commandFiles) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const command = require(`./commands/${file}`);
-            this.commands.set(command.name, command);
+            const { default: command} = require(`./commands/${file}`);
+            this.commands.set(command.getName(), command);
         }
 
     }
 
-    public handleMessage(mensagem: Message): void {
-        if (!mensagem.content.startsWith(BotConfig.prefix) || mensagem.author.bot) {
-            return;
-        }
-
-        const args = mensagem.content.slice(this.prefix.length)
-            .toLocaleLowerCase()
-            .split(/ +/);
-        console.log(args);
-
-        const commandName = args.shift();
-        console.log('Command:', commandName);
-        
-        const command = this.commands.get(commandName);
-
-        try{
-            command.execute(mensagem, args);
-        } catch (error) {
-            console.error(error);
-            mensagem.reply('There is a error trying to execute this command');
-        }
-
+    public handleMessage(): void {
+        this.client.on('message', (message: Message) => {
+            if (!message.content.startsWith(BotConfig.prefix) || message.author.bot) {
+                return;
+            }
+            console.log('Prefix',BotConfig.prefix);
+            const args = message.content.slice(BotConfig.prefix.length)
+                .toLocaleLowerCase()
+                .split(/ +/);
+            console.log(args);
+    
+            const commandName = args.shift();
+            console.log('Command:', commandName);
+            
+            console.log('Collection', this.commands);
+            const command = this.commands.get(commandName);
+            try{
+                command.execute(message, args);
+            } catch (error) {
+                console.error(error);
+                message.reply('There is a error trying to execute this command');
+            }
+        });
     }
  
     public start(): void {
@@ -56,7 +58,7 @@ export class DiscordBot {
             console.log('Bot is online!');
         });
 
-        this.client.on('message', this.handleMessage);
+        this.handleMessage();
 
         const token = (process.env.TOKEN as string);
         if (!token)

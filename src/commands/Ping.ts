@@ -7,7 +7,7 @@ const Ping = new Command(
     null,
     'Ping!',
     (message: Message, args: string[]) => {
-        message.channel.send('Ping!');
+        message.channel.send('Pong!');
     }
 );
 
