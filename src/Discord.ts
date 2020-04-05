@@ -3,9 +3,11 @@ import { readdirSync } from 'fs';
 import { resolve } from 'path';
 import BotConfig from '../config.js';
 
+import Command from './Model/Command';
+
 export class DiscordBot {
     private client: Client;
-    public commands: Collection<string, NodeRequire>;
+    public commands: Collection<string, Command>;
 
     public constructor() {
         this.client = new Client();
