@@ -1,6 +1,5 @@
 import Command from '../Model/Command';
 import { Message } from 'discord.js';
-import { strict } from 'assert';
 
 class Clear extends Command {
     constructor() {
