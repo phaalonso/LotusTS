@@ -23,6 +23,7 @@ export class DiscordBot {
         for (const file of commandFiles) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const { default: command} = require(`./commands/${file}`);
+            console.log(command);
             this.commands.set(command.getName(), command);
         }
 
@@ -42,8 +43,15 @@ export class DiscordBot {
             const commandName = args.shift();
             console.log('Command:', commandName);
             
-            console.log('Collection', this.commands);
-            const command = this.commands.get(commandName);
+            if (!this.commands.has(commandName)) {
+                return message.reply("Command don't found");
+            }
+
+            const command: Command = this.commands.get(commandName);
+            if (command.requireArgs() && args.length === 0) {
+                return message.reply(`Sorry, this command require the args: ${command.getUsage()}`);
+            }
+
             try{
                 command.execute(message, args);
             } catch (error) {

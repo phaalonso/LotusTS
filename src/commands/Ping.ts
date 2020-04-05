@@ -2,14 +2,20 @@ import { Message } from 'discord.js';
 
 import Command from '../Model/Command';
 
-const Ping = new Command(
-    'ping',
-    null,
-    'Ping!',
-    (message: Message, args: string[]) => {
-        message.channel.send('Pong!');
+class Ping extends Command {
+    constructor () {
+        super(
+            'ping',
+            'Pong!',
+            null,
+            null,
+        );
     }
-);
 
+    public execute(message: Message, [... args]): Promise<Message> {
+        console.log(args);
+        return message.channel.send('Pong!');
+    }
+}
 
-export default Ping;
+export default new Ping;
