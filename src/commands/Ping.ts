@@ -1,21 +1,16 @@
 import { Message } from 'discord.js';
 
-import Command from '../Model/Command';
+import CommandInterface from '../model/CommandInterface';
 
-class Ping extends Command {
-    constructor () {
-        super(
-            'ping',
-            'Pong!',
-            null,
-            null,
-        );
-    }
-
-    public execute(message: Message, [... args]): Promise<Message> {
+const Ping: CommandInterface = {
+    name: 'ping',
+    description: 'Pong!',
+    args: undefined,
+    usage: undefined,
+    execute: function (msg: Message, args: string[]): Promise<Message> {
         console.log(args);
-        return message.channel.send('Pong!');
+        return msg.channel.send('Pong!');
     }
 }
 
-export default new Ping;
+export default Ping;

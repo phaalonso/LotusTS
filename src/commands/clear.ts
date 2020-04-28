@@ -1,31 +1,27 @@
-import Command from '../Model/Command';
 import { Message } from 'discord.js';
 
-class Clear extends Command {
-    constructor() {
-        super(
-            'clear',
-            'Clear the chat',
-            1,
-            '<number>'
-        );
-    }
+import CommandInterface from '../model/CommandInterface';
 
-    public execute(message: Message, args: string[]): Promise<Message> {
+const clear: CommandInterface = {
+    name: 'clear',
+    description: 'Clear the current chat!',
+    args: 1,
+    usage: '<number>',
+    execute: function (msg: Message, args: string): Promise<Message> {
         const amount: number = Number.parseInt(args[0]);
         console.log(amount);
 
-        if (isNaN(amount)) return message.reply('The amount parameter is not a number!');
+        if (isNaN(amount)) return msg.reply('The amount parameter is not a number!');
         
         try{
-            message.channel.bulkDelete(amount, true);
+            msg.channel.bulkDelete(amount, true);
         } catch (error) {
             console.error(error);
         }
 
-        console.log(`Deleted ${amount} messages in the channel ${message.channel}`);
-        return message.reply(`Deleted ${amount} messages successfully`);
-    }
+        console.log(`Deleted ${amount} msgs in the channel ${msg.channel}`);
+        return msg.reply(`Deleted ${amount} messages successfully`);
+    } 
 }
 
-export default new Clear();
+export default clear;
